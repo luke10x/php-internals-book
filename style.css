@@ -1,0 +1,8 @@
+/* For converting to PDF */
+body {
+    width: 200mm; /* A4 dimension (210mm - 2*5mm)*/
+}
+@page {
+    margin: 5mm;
+    padding: 0;
+}

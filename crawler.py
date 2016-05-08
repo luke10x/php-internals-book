@@ -63,5 +63,12 @@ toc_soup = BeautifulSoup(toc_page, 'html.parser')
 
 c = toc_soup.select('div#table-of-contents')
 
+head = """
+<head>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+"""
+print(head)
+
 [print(x) for x in c]
 [print(x) for x in chapters]
