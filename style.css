@@ -1,6 +1,7 @@
 /* For converting to PDF */
 body {
     width: 200mm; /* A4 dimension (210mm - 2*5mm)*/
+    font-size: 125%;
 }
 @page {
     margin: 5mm;
