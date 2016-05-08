@@ -11,16 +11,29 @@ def fix_internal_link(link):
     href = link['href']
     href = re.sub('^(.*)#', '', href)
     link['href'] = "#%s" % href
-    return href
     
 def fix_external_link(link):
     href = link['href']
     link['href'] = "#%s" % href
-    return href
+
+def fix_image(img):
+    rsrc = img['src']
+    lsrc = re.sub('^(\.\./_images/)', '', rsrc)
+    url = base_url + '_images/' + lsrc
+    content = urllib.request.urlopen(url).read()
+    content_str = content.decode(encoding='UTF-8')
+
+    f = open(lsrc, "w")
+    f.write(str(content_str))
+    f.close()
+
+    img['src'] = lsrc
 
 def add_linked_page(link):
 
-    href = fix_external_link(link)
+    href = link['href']
+
+    fix_external_link(link)
 
     url = base_url + href
 
@@ -29,9 +42,13 @@ def add_linked_page(link):
     page = urllib.request.urlopen(url).read()
     soup = BeautifulSoup(page, 'html.parser')
 
-    [x.extract() for x in soup.select('a.headerlink')] # remove these strange links 
+    # remove these strange links
+    [x.extract() for x in soup.select('a.headerlink')]
 
+    # fix links for TOC's inside chapters
     [fix_internal_link(x) for x in soup.select('a.reference.internal')]
+
+    [fix_image(x) for x in soup.select('img')]
 
     content = " ".join([str(x) for x in soup.select('div.content')])
     chapters.append(anchor + content)
